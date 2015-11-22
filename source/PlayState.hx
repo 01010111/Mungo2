@@ -3,37 +3,72 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.util.FlxMath;
+import flixel.graphics.FlxGraphic;
+import flixel.tile.FlxBaseTilemap;
+import flixel.tile.FlxTile;
+import flixel.tile.FlxTilemap;
+import obj.Mungo;
+import obj.Wrench;
+import util.Control;
 
-/**
- * A FlxState which can be used for the actual gameplay.
- */
 class PlayState extends FlxState
 {
-	/**
-	 * Function that is called up when to state is created to set it up. 
-	 */
+	public static var i:PlayState;
+	public static var c:Control;
+	
+	var walls:Array<Array<Int>> = [
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+		[1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+	];
+	public var map:FlxTilemap;
+	public var mungo:Mungo;
+	public var wrench:Wrench;
+	
 	override public function create():Void
 	{
+		i = this;
+		c = new Control();
+		add(c);
+		
 		super.create();
+		
+		map = new FlxTilemap();
+		map.loadMapFrom2DArray(walls, "assets/images/auto_tiles.png", 16, 16, FlxTilemapAutoTiling.AUTO);
+		add(map);
+		
+		wrench = new Wrench();
+		add(wrench);
+		
+		mungo = new Mungo(2, 4);
+		add(mungo);
 	}
 	
-	/**
-	 * Function that is called when this state is destroyed - you might want to 
-	 * consider setting all objects this state uses to null to help garbage collection.
-	 */
-	override public function destroy():Void
+	override public function update(elapsed:Float):Void 
 	{
-		super.destroy();
+		check_collisions();
+		if (FlxG.keys.justPressed.R) FlxG.resetState();
+		super.update(elapsed);
 	}
-
-	/**
-	 * Function that is called once every frame.
-	 */
-	override public function update():Void
+	
+	function check_collisions():Void
 	{
-		super.update();
-	}	
+		FlxG.collide(mungo, map);
+		//FlxG.overlap(wrench, map, returnWrench);
+	}
+	
+	function returnWrench(w:Wrench, m:FlxTilemap):Void
+	{
+		w.rejoin();
+	}
+	
 }
