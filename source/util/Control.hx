@@ -15,7 +15,6 @@ class Control extends FlxObject
 	{
 		super();
 		ANALOG = FlxPoint.get();
-		FlxG.watch.add(ANALOG, "x", "Stick_x: ");
 	}
 	
 	public var A_PRESSED : Bool;
