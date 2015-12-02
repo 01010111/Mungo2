@@ -169,7 +169,7 @@ class Transition extends FlxSubState
 			if (i % held == 0)
 			{
 				new FlxTimer().start(i * w + 0.01).onComplete = function(t:FlxTimer):Void {
-					var p = ZMath.placeOnCircle(FlxG.width * 0.5,  FlxG.height * 0.5, i * 5, FlxG.width * 0.8 - i);
+					var p = ZMath.placeOnCircle(FlxPoint.get(FlxG.width * 0.5,  FlxG.height * 0.5), i * 5, FlxG.width * 0.8 - i);
 					FlxSpriteUtil.drawCircle(s, p.x, p.y, 80, black);
 				}
 				t += w * held;
